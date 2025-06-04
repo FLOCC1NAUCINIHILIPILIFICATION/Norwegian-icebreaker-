@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Norwegian Icebreaker</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100vh;
-      background: #0e1a22;
       overflow: hidden;
+      background: #0e1a22;
       font-family: 'Segoe UI', sans-serif;
     }
 
@@ -18,12 +18,30 @@
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: url('https://i.imgur.com/hN9X0eK.png'); /* frosty cracked ice texture */
+      background: url('https://images.newscientist.com/wp-content/uploads/2017/09/08165304/gettyimages-558312385.jpg');
       background-size: cover;
       background-position: center;
       opacity: 1;
       z-index: 10;
       transition: opacity 2s ease-in-out;
+    }
+
+    .flame {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, rgba(255,0,0,0.3) 0%, rgba(0,0,0,0) 70%);
+      z-index: 15;
+      opacity: 0;
+      animation: flicker 2s ease-in-out forwards;
+      animation-delay: 1.8s;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0; }
+      30% { opacity: 0.3; }
+      60% { opacity: 0.15; }
+      100% { opacity: 0; }
     }
 
     #welcome-text {
@@ -41,18 +59,18 @@
       opacity: 0;
       z-index: 20;
       animation: burnThrough 2.5s ease-out forwards;
-      animation-delay: 2s;
+      animation-delay: 2.3s;
     }
 
     @keyframes burnThrough {
       0% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
+        transform: translate(-50%, -50%) scale(0.8);
         filter: blur(8px);
       }
       60% {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.05);
+        transform: translate(-50%, -50%) scale(1.1);
         filter: blur(1px);
       }
       100% {
@@ -60,24 +78,6 @@
         transform: translate(-50%, -50%) scale(1);
         filter: blur(0);
       }
-    }
-
-    .flame {
-      position: absolute;
-      width: 100vw;
-      height: 100vh;
-      background: radial-gradient(ellipse at center, rgba(255,0,0,0.2) 0%, rgba(0,0,0,0) 70%);
-      z-index: 15;
-      opacity: 0;
-      animation: flicker 2s ease-in-out forwards;
-      animation-delay: 1s;
-    }
-
-    @keyframes flicker {
-      0% { opacity: 0; }
-      30% { opacity: 0.3; }
-      60% { opacity: 0.15; }
-      100% { opacity: 0; }
     }
   </style>
 </head>
@@ -87,11 +87,26 @@
   <div class="flame"></div>
   <h1 id="welcome-text">Welcome to Norwegian Icebreaker</h1>
 
+  <audio id="crackSound" preload="auto">
+    <source src="https://freesound.org/data/previews/110/110094_162041-lq.mp3" type="audio/mpeg" />
+    <!-- backup in case mp3 fails -->
+    <source src="https://freesound.org/data/previews/110/110094_162041-lq.ogg" type="audio/ogg" />
+  </audio>
+
   <script>
     window.addEventListener('load', () => {
+      const freeze = document.getElementById('freeze-layer');
+      const crack = document.getElementById('crackSound');
+
       setTimeout(() => {
-        document.getElementById('freeze-layer').style.opacity = '0'; // melt the ice
-      }, 2000); // melt starts after 2s
+        // Play crackling effect 🔊
+        crack.play().catch(() => {
+          console.log("Sound auto-play blocked, interact with the page to enable it.");
+        });
+
+        // Melt the ice 🧊
+        freeze.style.opacity = '0';
+      }, 1800);
     });
   </script>
 
