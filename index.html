@@ -1,99 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Norwegian Icebreaker</title>
-  <style>
-    body {
-      background: linear-gradient(to bottom, #002233, #00111a);
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(90deg, #00f2ff, #ff0000);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: burn 2s ease-out forwards;
-    }
-
-    @keyframes burn {
-      0% {
-        opacity: 0;
-        transform: scale(0.9);
-        filter: blur(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0px);
-      }
-    }
-
-    .container {
-      backdrop-filter: blur(8px);
-      background: rgba(0, 0, 0, 0.3);
-      border: 2px solid #00f2ff;
-      border-radius: 12px;
-      padding: 30px;
-      max-width: 500px;
-      margin: 20px;
-    }
-
-    input[type="text"] {
-      padding: 10px;
-      font-size: 16px;
-      width: 80%;
-      border-radius: 6px;
-      border: none;
-      margin-bottom: 10px;
-    }
-
-    button, a.button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #00f2ff;
-      color: #000;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    button:hover, a.button:hover {
-      background: #ff0000;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mini Sea of Thieves Vibes</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #87ceeb; }
+  canvas { display: block; }
+  #info {
+    position: absolute;
+    top: 10px; left: 10px;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    background: rgba(0,0,0,0.4);
+    padding: 10px;
+    border-radius: 6px;
+    user-select: none;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to Norwegian Icebreaker</h1>
+<div id="info">WASD to move ship, mouse to look around</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/PointerLockControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/objects/Water.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/GLTFLoader.js"></script>
 
-    <!-- DuckDuckGo Search -->
-    <form action="https://duckduckgo.com/" method="GET" target="_blank">
-      <input type="text" name="q" placeholder="Search with DuckDuckGo" />
-      <br />
-      <button type="submit">🔍 Search</button>
-    </form>
+<script>
+  // scene setup
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x87ceeb, 50, 400);
 
-    <!-- Ultraviolet Proxy -->
-    <a href="https://ultraivolet.mauriceking.repl.co" class="button" target="_blank">🌐 Open Ultraviolet Proxy</a>
+  // camera
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
-    <!-- GeForce NOW -->
-    <a href="https://play.geforcenow.com/" class="button" target="_blank">🎮 Launch GeForce NOW</a>
-  </div>
+  // renderer
+  const renderer = new THREE.WebGLRenderer({antialias: true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // controls (PointerLockControls for first person look)
+  const controls = new THREE.PointerLockControls(camera, document.body);
+
+  document.getElementById('info').addEventListener('click', () => {
+    controls.lock();
+  });
+
+  // light
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight.position.set(100, 100, 50);
+  scene.add(directionalLight);
+
+  // water
+  const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
+
+  const water = new THREE.Water(
+    waterGeometry,
+    {
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals: new THREE.TextureLoader().load('https://threejs.org/examples/textures/waternormals.jpg', function (texture) {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      }),
+      sunDirection: directionalLight.position.clone().normalize(),
+      sunColor: 0xffffff,
+      waterColor: 0x001e0f,
+      distortionScale: 3.7,
+      fog: scene.fog !== undefined
+    }
+  );
+
+  water.rotation.x = - Math.PI / 2;
+  scene.add(water);
+
+  // simple island (green sphere kinda lol)
+  const islandGeometry = new THREE.SphereGeometry(20, 32, 32);
+  const islandMaterial = new THREE.MeshStandardMaterial({color: 0x228822});
+  const island = new THREE.Mesh(islandGeometry, islandMaterial);
+  island.position.set(50, -18, -50);
+  scene.add(island);
+
+  // basic ship (box for now)
+  const shipGeometry = new THREE.BoxGeometry(4, 1, 8);
+  const shipMaterial = new THREE.MeshStandardMaterial({color: 0x8B4513});
+  const ship = new THREE.Mesh(shipGeometry, shipMaterial);
+  ship.position.set(0, 0.5, 0);
+  scene.add(ship);
+
+  // camera follows ship
+  camera.position.set(0, 3, 10);
+  camera.lookAt(ship.position);
+
+  // movement variables
+  const move = {forward: false, backward: false, left: false, right: false};
+  const velocity = new THREE.Vector3();
+  const direction = new THREE.Vector3();
+  const speed = 0.1;
+
+  // keyboard controls
+  function onKeyDown(event) {
+    switch(event.code){
+      case 'KeyW': move.forward = true; break;
+      case 'KeyS': move.backward = true; break;
+      case 'KeyA': move.left = true; break;
+      case 'KeyD': move.right = true; break;
+    }
+  }
+  function onKeyUp(event) {
+    switch(event.code){
+      case 'KeyW': move.forward = false; break;
+      case 'KeyS': move.backward = false; break;
+      case 'KeyA': move.left = false; break;
+      case 'KeyD': move.right = false; break;
+    }
+  }
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
+
+  // resize handler
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // main loop
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // movement logic
+    direction.z = Number(move.backward) - Number(move.forward);
+    direction.x = Number(move.right) - Number(move.left);
+    direction.normalize();
+
+    if(controls.isLocked === true){
+      if(direction.length() > 0){
+        velocity.x -= direction.x * speed;
+        velocity.z -= direction.z * speed;
+      }
+      // move ship
+      ship.position.x += velocity.x;
+      ship.position.z += velocity.z;
+
+      // friction
+      velocity.x *= 0.9;
+      velocity.z *= 0.9;
+
+      // update camera position relative to ship
+      const shipPos = ship.position.clone();
+      camera.position.lerp(new THREE.Vector3(shipPos.x, shipPos.y + 3, shipPos.z + 10), 0.1);
+      camera.lookAt(shipPos);
+    }
+
+    water.material.uniforms['time'].value += 1.0 / 60.0;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
 </body>
 </html>
