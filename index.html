@@ -1,8 +1,99 @@
 <!DOCTYPE html>
-<html>
-  <head><title>Yo, Norwegian Icebreaker!</title></head>
-  <body>
-    <h1>Welcome to Norwegian Icebreaker Website 🚢❄️</h1>
-    <p>This is the first version, stay tuned for more vibes!</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Norwegian Icebreaker</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: #0e1a22;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    #freeze-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://i.imgur.com/hN9X0eK.png'); /* frosty cracked ice texture */
+      background-size: cover;
+      background-position: center;
+      opacity: 1;
+      z-index: 10;
+      transition: opacity 2s ease-in-out;
+    }
+
+    #welcome-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ff3b3b;
+      text-shadow:
+        0 0 10px #ff3b3b,
+        0 0 20px #ff6f6f,
+        0 0 30px #ff0000;
+      opacity: 0;
+      z-index: 20;
+      animation: burnThrough 2.5s ease-out forwards;
+      animation-delay: 2s;
+    }
+
+    @keyframes burnThrough {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+        filter: blur(8px);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.05);
+        filter: blur(1px);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    .flame {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, rgba(255,0,0,0.2) 0%, rgba(0,0,0,0) 70%);
+      z-index: 15;
+      opacity: 0;
+      animation: flicker 2s ease-in-out forwards;
+      animation-delay: 1s;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0; }
+      30% { opacity: 0.3; }
+      60% { opacity: 0.15; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="freeze-layer"></div>
+  <div class="flame"></div>
+  <h1 id="welcome-text">Welcome to Norwegian Icebreaker</h1>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('freeze-layer').style.opacity = '0'; // melt the ice
+      }, 2000); // melt starts after 2s
+    });
+  </script>
+
+</body>
 </html>
