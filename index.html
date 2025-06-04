@@ -2,113 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Norwegian Icebreaker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Cool Site</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      background: #0e1a22;
       font-family: 'Segoe UI', sans-serif;
-    }
-
-    #freeze-layer {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
-      background: url('https://images.newscientist.com/wp-content/uploads/2017/09/08165304/gettyimages-558312385.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 1;
-      z-index: 10;
-      transition: opacity 2s ease-in-out;
+      flex-direction: column;
     }
-
-    .flame {
-      position: absolute;
-      width: 100vw;
-      height: 100vh;
-      background: radial-gradient(ellipse at center, rgba(255,0,0,0.3) 0%, rgba(0,0,0,0) 70%);
-      z-index: 15;
-      opacity: 0;
-      animation: flicker 2s ease-in-out forwards;
-      animation-delay: 1.8s;
-    }
-
-    @keyframes flicker {
-      0% { opacity: 0; }
-      30% { opacity: 0.3; }
-      60% { opacity: 0.15; }
-      100% { opacity: 0; }
-    }
-
-    #welcome-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    h1 {
       font-size: 3rem;
-      font-weight: bold;
-      color: #ff3b3b;
-      text-shadow:
-        0 0 10px #ff3b3b,
-        0 0 20px #ff6f6f,
-        0 0 30px #ff0000;
-      opacity: 0;
-      z-index: 20;
-      animation: burnThrough 2.5s ease-out forwards;
-      animation-delay: 2.3s;
+      margin-bottom: 10px;
     }
-
-    @keyframes burnThrough {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-        filter: blur(8px);
-      }
-      60% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1);
-        filter: blur(1px);
-      }
-      100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-        filter: blur(0);
-      }
+    p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+    a {
+      color: #00ffff;
+      text-decoration: none;
+      margin-top: 20px;
+      border: 1px solid #00ffff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      transition: 0.3s ease;
+    }
+    a:hover {
+      background-color: #00ffff;
+      color: #000;
     }
   </style>
 </head>
 <body>
-
-  <div id="freeze-layer"></div>
-  <div class="flame"></div>
-  <h1 id="welcome-text">Welcome to Norwegian Icebreaker</h1>
-
-  <audio id="crackSound" preload="auto">
-    <source src="https://freesound.org/data/previews/110/110094_162041-lq.mp3" type="audio/mpeg" />
-    <!-- backup in case mp3 fails -->
-    <source src="https://freesound.org/data/previews/110/110094_162041-lq.ogg" type="audio/ogg" />
-  </audio>
-
-  <script>
-    window.addEventListener('load', () => {
-      const freeze = document.getElementById('freeze-layer');
-      const crack = document.getElementById('crackSound');
-
-      setTimeout(() => {
-        // Play crackling effect 🔊
-        crack.play().catch(() => {
-          console.log("Sound auto-play blocked, interact with the page to enable it.");
-        });
-
-        // Melt the ice 🧊
-        freeze.style.opacity = '0';
-      }, 1800);
-    });
-  </script>
-
+  <h1>Yo, Welcome to My Site 👋</h1>
+  <p>This is just the beginning. Stay tuned for cool stuff 😎</p>
+  <a href="https://github.com">Check my GitHub</a>
 </body>
 </html>
